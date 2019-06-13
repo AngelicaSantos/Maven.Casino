@@ -1,6 +1,8 @@
 package io.zipcoder.casino;
 
-public interface SpinGame extends Game {
 
+public abstract class SpinGame extends Game {
+
+    abstract public Integer spin();
 
 }
