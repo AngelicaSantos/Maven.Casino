@@ -2,15 +2,18 @@ package io.zipcoder.casino.Slots;
 
 import io.zipcoder.casino.Gamble;
 import io.zipcoder.casino.SpinGame;
+import io.zipcoder.casino.utilities.Console;
 
 //public class Slots extends SpinGame implements Gamble {
     public class Slots extends SpinGame {
 
-        public String slotFace;
 
         @Override
         public Integer spin() {
 
+
+
+            String slotFace = "";
             Integer results = 0;
 
             Reel reel0 = new Reel();
@@ -42,9 +45,18 @@ import io.zipcoder.casino.SpinGame;
             slotFace += " |" + "\n";
             slotFace += "--------------------------------------------" + "\n";
 
-            System.out.println(slotFace);
 
-            results = 100000;
+            System.out.print(slotFace);
+
+
+            Console myConsole = new Console(System.in, System.out);
+            myConsole.println(slotFace);
+
+
+
+
+
+            results = 0;
             // Middle horizontal
             if ((reel0.getReelPlace(1) == reel1.getReelPlace(1)) && (reel0.getReelPlace(1) == reel2.getReelPlace(1))) {
                 results += 1;

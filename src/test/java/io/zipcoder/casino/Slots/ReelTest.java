@@ -6,10 +6,10 @@ public class ReelTest {
 
 
 
-//    @Test
-//    public void slotsSpinTest() {
-//        Integer myResults = Slots.spin();
-//    }
+    @Test
+   public void slotsMediator() {
+
+    }
 
 
     @Test
