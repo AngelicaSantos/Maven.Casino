@@ -1,15 +1,19 @@
 package io.zipcoder.casino.roulette;
 
+import io.zipcoder.casino.Gamble;
 import io.zipcoder.casino.Player;
 import io.zipcoder.casino.SpinGame;
 
-public class Roulette extends SpinGame {
+public class Roulette extends SpinGame implements Gamble {
 
     private Chips chips;
     private Player player;
+    private Boolean exit;
+
 
     // constructor
     public Roulette (Chips chips) {
+
         this.chips = chips;
     }
     // constructor
@@ -30,38 +34,20 @@ public class Roulette extends SpinGame {
         return null;
     }
 
-    /**
-     *
-     * @return the bet the player has placed
-     */
+
     public Integer playerBet () {
 
         return null;
     }
 
 
-//     * @return the money that will be collected after the bet is placed
-//     */
-//    public Integer collectPlayerMoney() {
-//
-//        return null;
-//    }
 
-    /**
-     *
-     *
-     * @return if they continue game or not
-     */
     public boolean continueGame() {
 
         return false;
     }
 
-    /**
-     *
-     *
-     * @return if they clear chips or not
-     */
+
     public boolean clearchips() {
 
         return false;

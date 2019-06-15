@@ -21,7 +21,7 @@ public final class Console {
         output.format(val, args);
     }
 
-    public void println(String val, Object... vals) {
+    public static void println(String val, Object... vals) {
         print(val + "\n", vals);
     }
 

@@ -81,12 +81,14 @@ public class BlackjackMediator {
             return gameAction;
         }
         else{
+
             System.out.println("Please enter a valid number");
             nextGameAction();
         }
 
         return gameAction;
     }
+
 
 
 
