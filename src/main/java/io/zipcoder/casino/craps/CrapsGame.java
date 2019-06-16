@@ -1,6 +1,5 @@
 package io.zipcoder.casino.craps;
 
-import com.sun.corba.se.impl.encoding.CodeSetConversion;
 import io.zipcoder.casino.Gamble;
 import io.zipcoder.casino.Game;
 import io.zipcoder.casino.Player;
@@ -9,6 +8,7 @@ import org.javatuples.Triplet;
 import io.zipcoder.casino.utilities.Console;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -45,7 +45,46 @@ public class CrapsGame extends Game implements Gamble {
      * If phase is WALKUP, will instead print the payout table and list of instructions
      */
     public String nextPhase(){
-        return null;
+        StringBuilder sbuild = new StringBuilder();
+        switch(phase){
+            case WALKUP:
+                String marque = "XXXXX  XXXX    XXX   XXXXX  XXXXX \n" +
+                                "XX     X   X  X   X  X   X  XX    \n" +
+                                "XX     XXXX   XXXXX  XXXXX  XXXXX \n" +
+                                "XX     X  X   X   X  XX        XX \n" +
+                                "XXXXX  X   X  X   X  XX     XXXXX \n";
+
+                phase = Phase.COMEOUT;
+                return marque + "\n\n" + printBetPayoutTable() + "\n\n" + printInstructions() + "\n";
+            case COMEOUT:
+                CrapsRoll comeRoll = rollDice();
+                sbuild.append("Shooter rolled ").append(comeRoll.getValue()).append("\n\n");
+
+                String comeResult = rollComeOut(comeRoll);
+                sbuild.append(comeResult).append("\n");
+
+                String comeReport = settleBets(comeRoll);
+                if(!comeReport.equals("")){
+                    sbuild.append(comeReport).append("\n\n");
+                }
+
+                return sbuild.toString();
+            case POINT:
+                CrapsRoll pointRoll = rollDice();
+                sbuild.append("Shooter rolled ").append(pointRoll.getValue()).append("\n\n");
+
+                String pointResult = rollPoint(pointRoll);
+                sbuild.append(pointResult).append("\n");
+
+                String pointReport = settleBets(pointRoll);
+                if(!pointReport.equals("")){
+                    sbuild.append(pointReport).append("\n\n");
+                }
+
+                return sbuild.toString();
+            default:
+                throw new IllegalArgumentException("Enum type phase not in enum Phase, somehow");
+        }
     }
 
     /**
@@ -53,7 +92,42 @@ public class CrapsGame extends Game implements Gamble {
      * @param input The input that CrapsRunner gets from the user
      * @return an InputResult with the response to the user's input and whether CrapsRunner should move on
      */
-    public InputResult processInput(String input){ return null; }
+    public Pair<String, Boolean> processInput(String input){
+        input = input.toLowerCase().trim();
+        Matcher betMatcher = betPattern.matcher(input);
+        if(betMatcher.matches()){
+            return new Pair<>(processBet(input),false);
+        }
+
+        if(leaveBets && !input.equals("exit")){
+            leaveBets = false;
+            return new Pair<>("\n", false);
+        }
+
+        switch(input){
+            case "show bets":
+                return new Pair<>(currentBets(), false);
+            case "payout":
+                return new Pair<>(printBetPayoutTable(), false);
+            case "help":
+                return new Pair<>(printInstructions(), false);
+            case "exit":
+                if(betList.size()!=0 && !leaveBets){
+                    leaveBets = true;
+                    return new Pair<>("You have open bets. Enter \"Exit\" again if you really want to leave\n", false);
+                }
+                else{
+                    exit = true;
+                    return new Pair<>("Goodbye\n", true);
+                }
+            case "roll":
+                return new Pair<>("Rolling... \n",true);
+            case "wallet":
+                return new  Pair<>(playerFunds(), false);
+            default:
+                return new Pair<>("Invalid command\n", false);
+        }
+    }
 
     /**
      * Processes a users request to bet. If the amount is valid, makes a new bet of the appropriate type and adds
@@ -62,7 +136,7 @@ public class CrapsGame extends Game implements Gamble {
      * @return Returns a string with the result. Confirmation of the bet if all was in order, an error message
      *   otherwise
      */
-    public Pair<String, Boolean> processBet(String input){
+    public String processBet(String input){
         String str = input.toLowerCase().substring(0,9);
         Matcher digitMatcher = digitPattern.matcher(input);
         digitMatcher.find();
@@ -71,11 +145,11 @@ public class CrapsGame extends Game implements Gamble {
 
         switch(str){
             case "pass line":
-                if(phase != Phase.COMEOUT){ return new Pair<String,Boolean>("You can only place a Pass Line bet in the Come Out phase", false); }
+                if(phase != Phase.COMEOUT){ return "You can only place a Pass Line bet in the Come Out phase"; }
                 bet = makeNewBet(BetType.PASS, value);
                 break;
             case "don't pas":
-                if(phase != Phase.COMEOUT){ return new Pair<String,Boolean>("You can only place a Don't Pass bet in the Come Out phase", false); }
+                if(phase != Phase.COMEOUT){ return "You can only place a Don't Pass bet in the Come Out phase"; }
                 bet = makeNewBet(BetType.DONTPASS, value);
                 break;
             case "field bet":
@@ -86,16 +160,16 @@ public class CrapsGame extends Game implements Gamble {
         }
 
         if(bet == null){
-            return new Pair<String, Boolean>("You've not enough minerals", false);
+            return "You've not enough minerals\n";
         }
         else{
             StringBuilder sbuild = new StringBuilder("Placed a ");
             sbuild.append(bet.getType());
             sbuild.append(" bet for $");
             sbuild.append(bet.getValue());
-            sbuild.append("\nPlace another bet? ");
+            sbuild.append("\n\n");
             addBet(bet);
-            return new Pair<String, Boolean>(sbuild.toString(), true);
+            return sbuild.toString();
         }
     }
 
@@ -105,8 +179,18 @@ public class CrapsGame extends Game implements Gamble {
      * @return A Pair containing a string summarizing the result of the roll as the first value and a boolean indicating
      *   whether or not to move onto the Point phase as the second value
      */
-    public Pair<String, Boolean> rollComeOut(CrapsRoll roll){
-        return null;
+    public String rollComeOut(CrapsRoll roll){
+        if(roll.getValue() == 7 || roll.getValue() == 11){
+            return "Natural\n";
+        }
+        else if(roll.getValue() == 2 || roll.getValue() == 3 || roll.getValue() == 12){
+            return "Shooter craps out\n";
+        }
+        else{
+            phase = Phase.POINT;
+            comeOutRoll = roll;
+            return "The Point is " + roll.getValue() +"\n";
+        }
     }
 
     /**
@@ -115,8 +199,20 @@ public class CrapsGame extends Game implements Gamble {
      * @return A Pair containing a string summarizing the result of the roll as the first value and a boolean indicating
      *   whether or not to start a new round as the second value
      */
-    public Pair<String, Boolean> rollPoint(CrapsRoll roll){
-        return null;
+    public String rollPoint(CrapsRoll roll){
+        if(roll.getValue() == 7){
+            phase = Phase.COMEOUT;
+            comeOutRoll = null;
+            return "7. Pass Line loses\n";
+        }
+        else if(roll.getValue().equals(comeOutRoll.getValue())){
+            phase = Phase.COMEOUT;
+            comeOutRoll = null;
+            return "Shooter hits. Pass Line wins\n";
+        }
+        else{
+            return "Play continues\n";
+        }
     }
 
     /**
@@ -124,7 +220,16 @@ public class CrapsGame extends Game implements Gamble {
      * @return a concatination of each bet's toString method, separated by a new line
      */
     public String currentBets(){
-        return null;
+        if(betList.size() == 0){
+            return "You don't have any bets placed\n";
+        }
+
+        StringBuilder sbuild = new StringBuilder("Your current bets are:\n");
+        for(CrapsBet bet : betList){
+            sbuild.append(bet.printBet());
+            sbuild.append("\n");
+        }
+        return sbuild.toString();
     }
 
     /**
@@ -145,11 +250,12 @@ public class CrapsGame extends Game implements Gamble {
     public String printInstructions(){
         return  "To place a Pass Line bet, enter  \"Pass Line \"  and the wager amount\n" +
                 "To place a Don't Pass bet, enter \"Don't Pass \" and the wager amount\n" +
-                "To place a Field bet, enter \"Field\"            and the wager amount\n" +
+                "To place a Field bet, enter \"Field bet\"        and the wager amount\n" +
                 "If you've placed as many bets as you want, enter \"Roll\"\n" +
                 "To see your current bets, enter \"Show Bets\"\n" +
                 "To print the payout table, enter \"Payout\"\n" +
-                "To leave, enter \"exit\"";
+                "To see your available funds, enter \"Wallet\"\n" +
+                "To leave, enter \"exit\"\n";
     }
 
     /**
@@ -190,7 +296,7 @@ public class CrapsGame extends Game implements Gamble {
      * @return true if yes, false if not
      */
     public Boolean getExit(){
-        return null;
+        return exit;
     }
 
     /**
@@ -208,8 +314,46 @@ public class CrapsGame extends Game implements Gamble {
      * @param currentRoll - the roll that all bets are checked against
      * @return a Triplet with the bet type, the value of the bet, and the amount won
      */
-    private Triplet<BetType, Integer, Integer > settleBets(CrapsRoll currentRoll){
-        return null;
+    public String settleBets(CrapsRoll currentRoll){
+        List<Triplet<BetType, Integer, Integer>> report = new ArrayList<>();
+        Iterator itr = betList.iterator();
+        while(itr.hasNext()){
+            CrapsBet bet = (CrapsBet)itr.next();
+            bet.checkRoll(currentRoll);
+            if(bet.hasWon()){
+                report.add(new Triplet<>(bet.getType(),bet.getValue(),bet.payout()));
+                player.collectWinnings(bet.payout());
+                itr.remove();
+            }
+            else if(bet.hasLost()){
+                report.add(new Triplet<>(bet.getType(),bet.getValue(),0));
+                itr.remove();
+            }
+        }
+
+        return reportSettledBets(report);
+    }
+
+    public String reportSettledBets(List<Triplet<BetType, Integer, Integer>> settleOutcomes){
+        StringBuilder sbuild = new StringBuilder();
+        for(Triplet trip : settleOutcomes){
+            if(trip.getValue2().equals(0)){
+                sbuild.append("Your ").append(trip.getValue0()).append(" bet for $").append(trip.getValue1()).append(" lost\n");
+            }
+            else if(trip.getValue2().equals(trip.getValue1())){
+                sbuild.append("Your ").append(trip.getValue0()).append(" bet for $").append(trip.getValue1()).append(" pushed\n");
+            }
+            else{
+                sbuild.append("Your ").append(trip.getValue0()).append(" bet for $").append(trip.getValue1());
+                sbuild.append(" payed out $").append(trip.getValue2()).append("\n");
+            }
+
+        }
+        return sbuild.toString();
+    }
+
+    public String playerFunds(){
+        return "You have $" + player.getMoney() + " in your wallet\n\n";
     }
 
     public Integer getNumberOfBets(){
@@ -236,9 +380,22 @@ public class CrapsGame extends Game implements Gamble {
         return leaveBets;
     }
 
+
     // DANGEROUS only for testing
     protected void setLeaveBets(Boolean leaveBets){
         this.leaveBets = leaveBets;
+    }
+
+    // for testing only
+    protected CrapsRoll getComeOutRoll(){
+        return comeOutRoll;
+    }
+
+
+
+    @Override
+    public Integer payOut(Integer amount) {
+        return null;
     }
 
 }
