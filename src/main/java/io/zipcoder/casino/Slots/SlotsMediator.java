@@ -6,83 +6,86 @@ import io.zipcoder.casino.utilities.Console;
 
 public class SlotsMediator {
 
+static Integer myBet;
 
-  public void slotsMediator() {
+  public static void slotsMediator(SlotsPlayer player) {
+
+      Integer payOut = 0;
+
+        Integer wallet = 100;
+        Integer turns = 0;
+
+      SlotsPlayer myPlayer = player;
+
+
+      Slots slots = new Slots();
 
       Console myConsole = new Console(System.in, System.out);
 
-      String consoleText;
 
-      Integer n0 = 1;
-      Integer n1 = 10;
-      Integer n2 = 100;
-      Integer n3 = 1000;
-      Integer n4 = 10000;
+      while ((wallet > 0) && (wallet <=3000)) {
 
-      Integer payLines = 0;
-      Integer payOut = 0;
-      Integer odds = (int) (0.9 * (8 * 8 * 8) / 7);
+          myBet = myPlayer.bet();
 
-      consoleText = "Welcome to ZCW Slots!";
-      myConsole.println(consoleText);
-
-      consoleText = "";
-      myConsole.println(consoleText);
-
-      consoleText = "$1 bet gets the middle horizontal PayLine.";
-      myConsole.println(consoleText);
-
-      consoleText = "$3 bet gets all three horizontal PayLines.";
-      myConsole.println(consoleText);
-
-      consoleText = "$5 bet gets all horizontal and two diagonal PayLines.";
-      myConsole.println(consoleText);
-
-      consoleText = "";
-      myConsole.println(consoleText);
-
-      consoleText = "How many dollars do you want to bet? ";
-      Integer myBet = myConsole.getIntegerInput(consoleText);//
-
-      Slots slots = new Slots();
-      Integer myResult = slots.spin();
+          wallet = wallet - myBet;
+          if (wallet < 0) {
+              wallet = 0;
+          }
+            turns++;
 
 
-      if (myResult >= n4) {
-          payLines++;
-          myResult = myResult - n4;
+          String consoleText;
+
+          Integer payLines = 0;
+
+          Integer odds = (int) (0.70 * (8 * 8 * 8));
+
+          consoleText = "Welcome to ZCW Slots!";
+          myConsole.println(consoleText);
+
+          consoleText = "";
+          myConsole.println(consoleText);
+
+          consoleText = "$1 bet gets the middle horizontal PayLine.";
+          myConsole.println(consoleText);
+
+          consoleText = "$3 bet gets all three horizontal PayLines.";
+          myConsole.println(consoleText);
+
+          consoleText = "$5 bet gets all horizontal and two diagonal PayLines.";
+          myConsole.println(consoleText);
+
+          consoleText = "";
+          myConsole.println(consoleText);
+
+          consoleText = "How many dollars do you want to bet? ";
+          myConsole.print(consoleText);
+
+          consoleText = myBet.toString();
+          myConsole.println(consoleText);
+
+          Integer myResult = slots.spin();
+
+          payOut = myResult * odds;
+
+
+          if (payOut > 0) {
+              consoleText = "You won $" + payOut + " !";
+              myConsole.println(consoleText);
+
+          } else {
+              consoleText = "Sorry, you lose. ";
+              myConsole.println(consoleText);
+
+          }
+
+          wallet = wallet + payOut;
+
+
+          consoleText = "Your wallet is $" + wallet + " after " + turns + " turns !";
+          myConsole.println(consoleText);
+
       }
-
-      if (myResult >= n3) {
-          payLines++;
-          myResult = myResult - n3;
-      }
-
-      if (myResult >= n2) {
-          payLines++;
-          myResult = myResult - n2;
-      }
-
-      if (myResult >= n1) {
-          payLines++;
-          myResult = myResult - n1;
-      }
-
-      if (myResult >= n0) {
-          payLines++;
-          myResult = myResult - n0;
-      }
-
-        payOut = myBet * payLines * odds;
-
-        if (payLines == 0) {
-            consoleText = "Sorry, you lose!";
-            myConsole.println(consoleText);
-        }
-        else {
-            consoleText = "You win $" + payOut + " !";
-            myConsole.println(consoleText);
-        }
 
 
 
@@ -90,19 +93,17 @@ public class SlotsMediator {
   }
 
 
-
-
-      public static boolean isInteger (String s){
-          try {
-              Integer.parseInt(s);
-          } catch (NumberFormatException e) {
-              return false;
-          } catch (NullPointerException e) {
-              return false;
-          }
-          return true;
+      public static Integer getBet() {
+          return myBet;
       }
 
-}
+
+  }
+
+
+
+
+
+
 
 

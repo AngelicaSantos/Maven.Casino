@@ -10,9 +10,7 @@ import io.zipcoder.casino.utilities.Console;
 
         @Override
         public Integer spin() {
-
-
-
+            Integer iBet = 0;
             String slotFace = "";
             Integer results = 0;
 
@@ -46,43 +44,53 @@ import io.zipcoder.casino.utilities.Console;
             slotFace += "--------------------------------------------" + "\n";
 
 
-            System.out.print(slotFace);
-
-
             Console myConsole = new Console(System.in, System.out);
             myConsole.println(slotFace);
 
-
-
-
-
             results = 0;
-            // Middle horizontal
-            if ((reel0.getReelPlace(1) == reel1.getReelPlace(1)) && (reel0.getReelPlace(1) == reel2.getReelPlace(1))) {
-                results += 1;
+
+           iBet = SlotsMediator.getBet();
+
+            if (iBet >= 1) {
+
+                // Middle horizontal
+                if ((reel0.getReelPlace(1) == reel1.getReelPlace(1)) && (reel0.getReelPlace(1) == reel2.getReelPlace(1))) {
+                    results++;
+                }
             }
 
-            // Top Horizontal
-            if ((reel0.getReelPlace(0) == reel1.getReelPlace(0)) && (reel0.getReelPlace(0) == reel2.getReelPlace(0))) {
-                results += 10;
+
+
+            if (iBet >= 3) {
+
+                // Top Horizontal
+                if ((reel0.getReelPlace(0) == reel1.getReelPlace(0)) && (reel0.getReelPlace(0) == reel2.getReelPlace(0))) {
+                    results++;
+                }
+
+                // Bottom horizontal
+                if ((reel0.getReelPlace(2) == reel1.getReelPlace(2)) && (reel0.getReelPlace(2) == reel2.getReelPlace(2))) {
+                    results++;
+                }
             }
 
-            // Bottom horizontal
-            if ((reel0.getReelPlace(2) == reel1.getReelPlace(2)) && (reel0.getReelPlace(2) == reel2.getReelPlace(2))) {
-                results += 100;
-            }
 
-            // Diagonal toward right
-            if ((reel0.getReelPlace(0) == reel1.getReelPlace(1)) && (reel0.getReelPlace(0) == reel2.getReelPlace(2))) {
-                results += 1000;
-            }
 
-            // Diagonal toward left
-            if ((reel2.getReelPlace(0) == reel1.getReelPlace(1)) && (reel2.getReelPlace(0) == reel0.getReelPlace(2))) {
-                results += 10000;
-            }
+            if (iBet >= 5) {
 
-      return results;
+                // Diagonal toward top left
+                if ((reel0.getReelPlace(0) == reel1.getReelPlace(1)) && (reel0.getReelPlace(0) == reel2.getReelPlace(2))) {
+                    results++;
+                }
+
+                // Diagonal toward top right
+                if ((reel2.getReelPlace(0) == reel1.getReelPlace(1)) && (reel2.getReelPlace(0) == reel0.getReelPlace(2))) {
+                    results++;
+                }
+            }
+            return results;
+        }
+
     }
-}
+
 

@@ -7,8 +7,9 @@ public class ReelTest {
 
 
     @Test
-   public void slotsMediator() {
+   public void testslotsMediator() {
 
+        SlotsMediator.slotsMediator(new SlotsPlayer());
     }
 
 
