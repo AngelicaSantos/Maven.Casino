@@ -27,12 +27,14 @@ static Integer myBet;
 
           myBet = myPlayer.bet();
 
+          if (wallet < 5) myBet = 3;
+          if (wallet < 3) myBet = 1;
+
           wallet = wallet - myBet;
           if (wallet < 0) {
               wallet = 0;
           }
             turns++;
-
 
           String consoleText;
 
