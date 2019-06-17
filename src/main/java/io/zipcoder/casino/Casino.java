@@ -1,7 +1,6 @@
 package io.zipcoder.casino;
 
 
-import io.zipcoder.casino.GoFish.GoFish;
 import io.zipcoder.casino.blackJack.Blackjack;
 import io.zipcoder.casino.continental.Continental;
 import io.zipcoder.casino.roulette.Roulette;
@@ -69,10 +68,11 @@ public class Casino {
                 //CrapsGame craps = new CrapsGame(player);
                 break;
             case 4:
-                GoFish goFish = new GoFish();
+               // GoFish goFish = new GoFish();
                 break;
             case 5:
                 Roulette roulette = new Roulette(player);
+                roulette.run();
                 break;
             case 6:
                 //Slots slots

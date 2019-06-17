@@ -1,212 +1,148 @@
 package io.zipcoder.casino.roulette;
-
-import io.zipcoder.casino.Gamble;
-import io.zipcoder.casino.Game;
 import io.zipcoder.casino.Player;
 import io.zipcoder.casino.utilities.Console;
 
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Roulette extends Game implements Gamble {
+public class Roulette
+{
+    Player player;
 
-    String betType;
-    protected Player roulettePlayer;
-    private Double currentBet;
-    private ArrayList<RoulettePanel> betPanel;
-    Console console = new Console(System.in, System.out);
-
-     RoulettePanel[] roulettePanel = {
-             new RoulettePanel(Color.RED, 1),
-             new RoulettePanel(Color.BLACK, 2),
-             new RoulettePanel(Color.RED,3),
-             new RoulettePanel(Color.BLACK, 4),
-             new RoulettePanel(Color.RED, 5),
-             new RoulettePanel(Color.BLACK, 6),
-             new RoulettePanel(Color.RED,7),
-             new RoulettePanel(Color.BLACK, 8),
-             new RoulettePanel(Color.RED, 9),
-             new RoulettePanel(Color.BLACK, 10),
-             new RoulettePanel(Color.BLACK,11),
-             new RoulettePanel(Color.RED, 12),
-             new RoulettePanel(Color.BLACK, 13),
-             new RoulettePanel(Color.RED, 14),
-             new RoulettePanel(Color.BLACK,15),
-             new RoulettePanel(Color.RED, 16),
-             new RoulettePanel(Color.BLACK,17),
-             new RoulettePanel(Color.RED, 18),
-             new RoulettePanel(Color.RED, 19),
-             new RoulettePanel(Color.BLACK, 20),
-             new RoulettePanel(Color.RED,21),
-             new RoulettePanel(Color.BLACK, 22),
-             new RoulettePanel(Color.RED, 23),
-             new RoulettePanel(Color.BLACK,24),
-             new RoulettePanel(Color.RED, 25),
-             new RoulettePanel(Color.BLACK,26),
-             new RoulettePanel(Color.RED, 27),
-             new RoulettePanel(Color.BLACK, 28),
-             new RoulettePanel(Color.BLACK, 29),
-             new RoulettePanel(Color.RED,30),
-             new RoulettePanel(Color.BLACK, 31),
-             new RoulettePanel(Color.RED, 32),
-             new RoulettePanel(Color.BLACK,33),
-             new RoulettePanel(Color.RED, 34),
-             new RoulettePanel(Color.BLACK,35),
-             new RoulettePanel(Color.RED, 36),
-             new RoulettePanel(Color.GREEN, 0),
-             new RoulettePanel(Color.GREEN, 0)
-     };
-
-
-    public RoulettePanel spin() {
-        Random random = new Random();
-        return roulettePanel[random.nextInt(roulettePanel.length)];
+    public Roulette(Player player) {
+        this.player=player;
     }
 
-
-    public Roulette(Player roulettePlayer) {
-        this.roulettePlayer = roulettePlayer;
+    public void startRoulette() {
     }
 
-
-
-    public void nextTurn() {
-
+    public Integer getPlayerBalance() {
+        return getPlayerBalance();
     }
 
-
-    public void endGame() {
-
+    public Integer playerBet() {
+        return playerBet();
     }
 
+    public void run()
+        {
+            Console console = new Console(System.in, System.out);
+        Scanner keyboard = new Scanner(System.in);
+        Random generator = new Random();
+        double total = player.getMoney();
+        double amount;
+        int choice, win = 0, lose = 0, spin = 0;
+        int number;
+        int rouletteNum;
+        int result;
+        char response = 'y';
+        int resultArr[] = new int[36];
 
-    public boolean getResults() {
-        // determine win or loose
-        return false;
-    }
-
-
-    public Integer calcPayment(Integer bet, Integer odds) {
-
-        return bet + odds * bet;
-    }
-
-
-    public void updateAccount(Integer num) {
-        //add or remove money from the balance
-        this.roulettePlayer.setAccount((double)(num));
-    }
-
-    public Double getCurrentBet() {
-
-        return currentBet;
-    }
-
-    public void setCurrentBet(Double currentBet) {
-        this.currentBet = currentBet;
-    }
-
-    public Double calcPayment(Double bet, Double odds) {
-
-        return bet + odds * bet;
-    }
-
-    public void withdraw(Double num) {
-
-    }
-
-    public void deposit(Double num) {
-
-    }
-
-    public void play() {
-        String welcome = "Welcome to Roulette!";
-        console.println(welcome);
-
-        // Get Bet Amount
-        Scanner sc = new Scanner(System.in);
-        console.println("Please enter Bet amount : ");
-        int enterBet = sc.nextInt();
-        sc.nextLine();
+        while (response == 'y' || response == 'Y' && total <= 0 )
+        {
+        console.println("Enter your bet amount: ");
+        amount = keyboard.nextDouble();
+        console.println("0 - Even\n1 - Odd\n2 - Number\n");
+        choice = -1;
 
 
-        console.println("Bet position : ");
-        String betPosition = sc.nextLine();
-
-        // Calculate the odds based on the position.
-        double odds;
-        if(betPosition.equalsIgnoreCase("red") || betPosition.equalsIgnoreCase("Black") || betPosition.equalsIgnoreCase("even") || betPosition.equalsIgnoreCase("odd")) {
-            odds = 1d;
-
+        while (choice < 0 || choice > 2)
+        {
+        console.println("Place your bet on: ");
+        choice = keyboard.nextInt();
         }
-        else if(betPosition.equalsIgnoreCase("1st12") || betPosition.equalsIgnoreCase("2nd12") || betPosition.equalsIgnoreCase("3rd12")) {
-            odds = 2d;
+        number = 0;
+        if (choice == 2)
+        {
+        while (number < 1 || number > 36)
+        {
+        console.println("Place your bet on number(1-36): ");
+        number = keyboard.nextInt();
         }
-        else {
-            odds = 35d;
+        }
+        rouletteNum = generator.nextInt(37);
+        spin++;
+        console.println("Roulette number: " + rouletteNum);
+
+        if (choice == 2)
+        {
+        if (rouletteNum == number)
+        result = 35;
+        else
+        result = 0;
+        }
+        else
+        {
+        if (rouletteNum == 0 || rouletteNum % 2 != choice)
+        result = 0;
+        else
+        result = 1;
         }
 
-        // Deduct the current bet from the account balance
-        this.updateBalance(enterBet * (-1d));
+        //Print out game result, win/lose amount
+        if (result > 0)
+        {
+        console.println("Congratulatons!!! You win!");
+        console.println("You have won $%.2f \n", result * amount);
+        console.println("Here's your money back: $%.2f \n",
+        (result + 1) * amount);
+        total = (result + 1) * amount + total;
+        win ++;
+        resultArr[rouletteNum]++;
 
-        // Generate a random number where the ball is going to fall - Range should be 0 to 36
-        int random = (int)(Math.random() * 36 + 1);
-        console.println(" Winning Number " +random);
-        //System.out.println("Even " +);
-
-        // Identify if the position of bet is winning position
-        if(isWinner(betPosition, random)) {
-            console.println("You Won!");
-            double d = calcPayment((double)enterBet,odds );
-            updateBalance(d);
         }
-        else {
-            console.println("Sorry..You Lose");
-        }
-        console.println("Game Over \n");
-        console.println("Your Balance is : " +this.roulettePlayer.getAccount());
-        // Update the Account Balance
+        else
+        {
+        console.println("You lose. Better luck next time!");
+        console.println("You have lost $%.2f \n",
+        (result + 1) * amount);
+        total = total - (result + 1) * (amount);
+        lose ++;
+        resultArr[rouletteNum]++;
 
-
-    }
-    public void updateBalance(Double amount) {
-        String d = this.roulettePlayer.getAccount();
-        String add = d + amount;
-        this.roulettePlayer.setAccount(Double.parseDouble(add));
-
-    }
-
-    public boolean isWinner(String betPosition,int random  ) {
-        if(betPosition.equalsIgnoreCase("even") && random % 2 == 0) {
-            return true;
-        }
-        else if(betPosition.equalsIgnoreCase("odd") && random % 2 != 0) {
-            return true;
+        if (total <= 0) {
+        break;
         }
 
-        else if(betPosition.equalsIgnoreCase("1st12") && random <= 12 && random >=1) {
-            return true;
         }
-        else if(betPosition.equalsIgnoreCase("2nd12") && random <=24 && random >=13) {
-            return true;
-        }
-        else if(betPosition.equalsIgnoreCase("3rd12") && random <= 36 && random >=14) {
-            return true;
-        }
-        else if(betPosition.equalsIgnoreCase(Integer.toString(random))) {
-            return true;
-        }
-        return false;
-    }
 
-    @Override
-    public Integer payOut(Integer amount) {
-        return amount;
-    }
+        //Ask for another game
+        for (int totals=1; totals<36; totals++) {
+        if( resultArr[totals] > 0 ) {
+        console.println("The number " + totals + " won " + resultArr[totals] + " times.");
+        }
+        }
+
+
+        console.println("You haye $" + total + " remaining." );
+        console.println("You have won " + win + " games.");
+        console.println("You have lost " + lose + " games.");
+        console.println("The wheel has been spun " + spin + " times.");
+        console.println("\nWould you like to play another game? (y/n) ");
+
+        response = keyboard.next().charAt(0);
+
+
+
+        }
+
+        }
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
