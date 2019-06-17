@@ -65,11 +65,13 @@ public class Continental extends CardGame{
 
         deal();
         discard(drawFromDeck());
-        while(!gameOver) {
+        while((!gameOver) && (!deck.isEmpty())) {
             playerTurn();
-            if(gameOver) break;
+            if(gameOver || (deck.isEmpty())) break;
             computerTurn();
         }
+
+        if(deck.isEmpty()) ContinentalMediator.println("Ran out of Cards. You Lose", console);
 
     }
 
