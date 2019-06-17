@@ -21,7 +21,7 @@ public final class Console {
         output.format(val, args);
     }
 
-    public static void println(String val, Object... vals) {
+    public void println(String val, Object... vals) {
         print(val + "\n", vals);
     }
 
@@ -55,6 +55,7 @@ public final class Console {
     }
 
     public Integer getIntegerInput(String prompt, Object... args) {
+
         return getLongInput(prompt, args).intValue();
     }
 }

@@ -4,8 +4,7 @@ public class Player {
 
     private Integer money;
     private String name;
-
-
+    private String account;
 
 
     public Player(Integer money, String name) {
@@ -32,6 +31,14 @@ public class Player {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setAccount(double num) {
+    }
+
+    public String getAccount() {
+        return account;
+
     }
 }
 
