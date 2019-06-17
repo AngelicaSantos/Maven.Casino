@@ -44,6 +44,7 @@ public class ContinentalMediator {
 
         while(!valid) {
             Integer input = console.getIntegerInput("Select index of a Card to Discard");
+            input--;
 
 
             if((input >= 0) && (input < hand.size())) {
