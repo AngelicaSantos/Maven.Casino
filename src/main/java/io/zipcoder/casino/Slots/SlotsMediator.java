@@ -31,9 +31,11 @@ static Integer myBet;
           if (wallet < 3) myBet = 1;
 
           wallet = wallet - myBet;
-          if (wallet < 0) {
-              wallet = 0;
-          }
+
+//          if (wallet < 0) {
+//              wallet = 0;
+//          }
+
             turns++;
 
           String consoleText;
