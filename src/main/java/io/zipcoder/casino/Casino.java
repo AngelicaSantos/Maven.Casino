@@ -80,6 +80,7 @@ public class Casino {
                 break;
             case 5:
                 Roulette roulette = new Roulette(player);
+                roulette.run();
                 break;
             case 6:
                 //Slots slots
