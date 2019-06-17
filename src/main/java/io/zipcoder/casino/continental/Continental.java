@@ -74,20 +74,22 @@ public class Continental extends CardGame{
     }
 
     public void playerTurn() {
-        ContinentalMediator.println("YOUR TURN" , console);
-        ContinentalMediator.println("Top of Pile: " + showTopCardOnPile(), console);
+        ContinentalMediator.println("YOUR TURN\n" , console);
+        ContinentalMediator.println("Top of Pile: " + showTopCardOnPile() + "\n", console);
 
-        ContinentalMediator.println("Your Hand: \n" + player.getHand().toString(), console);
+        ContinentalMediator.println("Your Hand: \n" + player.getHand().toString() + "\n", console);
 
-        if(ContinentalMediator.deckOrPileDraw(console)){
+        Boolean turnSelection = ContinentalMediator.deckOrPileDraw(console);
+        if(turnSelection){
             player.addToHand(drawFromDeck());
         }
         else {
             player.addToHand(drawFromPile());
         }
-        ContinentalMediator.println("Your Hand: \n" + player.getHand().toString(), console);
+        ContinentalMediator.println("Your Hand: \n" + player.getHand().toString() + "\n", console);
 
-        discard(ContinentalMediator.selectCard(player.getHand(), console));
+        Card get = ContinentalMediator.selectCard(player.getHand(), console);
+        discard(get);
         if(isWinningHand(player.getHand())){
             ContinentalMediator.println("You Win", console);
             gameOver = true;
@@ -112,7 +114,8 @@ public class Continental extends CardGame{
         }
 
 
-        discard(computer.removeByIndex(random.nextInt(computer.size())));
+        Card getRid = computer.removeByIndex(random.nextInt(computer.size()));
+        discard(getRid);
         if(isWinningHand(computer)){
             ContinentalMediator.println("You Lost", console);
             gameOver = true;

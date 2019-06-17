@@ -12,10 +12,10 @@ public class ContinentalMediator {
         this.console = console;
     }
 
-    public static Boolean deckOrPileDraw(Console console) {
+    public static boolean deckOrPileDraw(Console console) {
         Boolean valid = false;
         String input = "";
-        while (valid) {
+        while (!valid) {
 
             input = console.getStringInput("Draw from the Deck of Pile?");
             input = input.toLowerCase();
@@ -36,14 +36,15 @@ public class ContinentalMediator {
 
 
 
-        return null;
+        return true;
     }
 
     public static Card selectCard(Hand hand, Console console) {
         Boolean valid = false;
 
-        while(valid) {
+        while(!valid) {
             Integer input = console.getIntegerInput("Select index of a Card to Discard");
+
 
             if((input >= 0) && (input < hand.size())) {
                 return hand.removeByIndex(input);
