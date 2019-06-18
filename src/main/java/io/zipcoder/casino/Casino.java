@@ -2,10 +2,16 @@ package io.zipcoder.casino;
 
 
 import io.zipcoder.casino.GoFish.GoFish;
+
 import io.zipcoder.casino.Slots.SlotsMediator;
+
+import io.zipcoder.casino.GoFish.GoFishPlayer;
+
+import io.zipcoder.casino.Slots.SlotsPlayer;
 import io.zipcoder.casino.blackJack.Blackjack;
 import io.zipcoder.casino.continental.Continental;
 import io.zipcoder.casino.craps.CrapsGame;
+import io.zipcoder.casino.craps.CrapsMediator;
 import io.zipcoder.casino.roulette.Roulette;
 import io.zipcoder.casino.utilities.Console;
 
@@ -65,21 +71,27 @@ public class Casino {
                 bj.startBlackjack();
                 break;
             case 2:
-                Continental continental = new Continental();
+                Continental continental = new Continental(player, console);
+                continental.startGame();
                 break;
             case 3:
-                //CrapsGame craps = new CrapsGame(player);
+                CrapsMediator crapsMed = new CrapsMediator(player, console);
+                crapsMed.play();
                 break;
             case 4:
-                GoFish goFish = new GoFish();
+                GoFishPlayer bob = new GoFishPlayer(player);
+                GoFish goFish = new GoFish(bob);
+                goFish.startGame();
                 break;
             case 5:
                 Roulette roulette = new Roulette(player);
+                roulette.run();
                 break;
             case 6:
                 //Slots slots
                 SlotsMediator slotMed = new SlotsMediator();
-                slotMed.slotsMediator(player);
+                SlotsPlayer player = new SlotsPlayer();
+                SlotsMediator.slotsMediator(player);
                 break;
         }
 

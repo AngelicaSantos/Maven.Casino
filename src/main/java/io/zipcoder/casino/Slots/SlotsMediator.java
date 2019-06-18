@@ -1,7 +1,5 @@
 package io.zipcoder.casino.Slots;
 
-import io.zipcoder.casino.Gamble;
-import io.zipcoder.casino.SpinGame;
 import io.zipcoder.casino.utilities.Console;
 
 public class SlotsMediator {
