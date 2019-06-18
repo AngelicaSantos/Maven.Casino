@@ -6,6 +6,4 @@ public abstract class SpinGame extends Game {
     abstract public Integer spin();
 
 
-
-
 }

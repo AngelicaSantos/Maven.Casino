@@ -19,7 +19,7 @@ public class SlotsPlayer extends Player implements GamblingPlayer {
 
     }
 
-    @Override
+    public Integer bet(Integer num) { return null; }
     public Integer bet() {
   //      Integer myBet = 0;
         Integer ranNum = 0;

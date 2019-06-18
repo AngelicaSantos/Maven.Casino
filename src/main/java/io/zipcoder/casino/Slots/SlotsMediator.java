@@ -25,19 +25,6 @@ static Integer myBet;
 
       while ((wallet > 0) && (wallet <=3000)) {
 
-          myBet = myPlayer.bet();
-
-          if (wallet < 5) myBet = 3;
-          if (wallet < 3) myBet = 1;
-
-          wallet = wallet - myBet;
-
-//          if (wallet < 0) {
-//              wallet = 0;
-//          }
-
-            turns++;
-
           String consoleText;
 
           Integer payLines = 0;
@@ -59,14 +46,27 @@ static Integer myBet;
           consoleText = "$5 bet gets all horizontal and two diagonal PayLines.";
           myConsole.println(consoleText);
 
-          consoleText = "";
+          consoleText = "0 ends the game. ";
           myConsole.println(consoleText);
 
-          consoleText = "How many dollars do you want to bet? ";
-          myConsole.print(consoleText);
+          consoleText = "How many dollars do you want to bet (1 - 3 - 5) ?" ;
+          myBet = myConsole.getIntegerInput(consoleText);
 
-          consoleText = myBet.toString();
-          myConsole.println(consoleText);
+          if (myBet == 0) {
+              break;
+          }
+
+//          myConsole.print(consoleText);
+//          myBet = myPlayer.bet();
+//          consoleText = myBet.toString();
+//          myConsole.println(consoleText);
+
+          if (wallet < 5) myBet = 3;
+          if (wallet < 3) myBet = 1;
+
+          wallet = wallet - myBet;
+
+          turns++;
 
           Integer myResult = slots.spin();
 
@@ -91,16 +91,11 @@ static Integer myBet;
 
       }
 
-
-
-
   }
-
 
       public static Integer getBet() {
           return myBet;
       }
-
 
   }
 

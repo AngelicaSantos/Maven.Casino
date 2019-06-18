@@ -30,7 +30,11 @@ public class Hand {
      * @return An array of Cards in the Hand
      */
     public Card[] getCards() {
-        return null;
+        Card[] handAsArray = new Card[cards.size()];
+        handAsArray = cards.toArray(handAsArray);
+
+
+        return handAsArray;
         //get hand and send to console for display
     }
 
@@ -39,7 +43,7 @@ public class Hand {
      * @param card The card being checked for
      * @return the index of the card being checked for
      */
-    public Integer indexOf(Card card) { return null; }
+    public Integer indexOf(Card card) { return cards.indexOf(card); }
 
 
     /**
@@ -47,7 +51,10 @@ public class Hand {
      * @param card the Card being remove.
      * @return the removed card.
      */
-    public Card removeByCard(Card card) { return null; }
+
+    public Boolean removeByCard(Card card) {
+
+        return cards.remove(card); }
 
     /**
      * Remove the card from the hand at the index selected.
@@ -56,7 +63,9 @@ public class Hand {
      * @return the removed card.
      */
     public Card removeByIndex(int index){
-        return null;
+
+
+        return cards.remove(index);
     }
 
     /**
@@ -64,40 +73,63 @@ public class Hand {
      * @param index the position of the Card in the Hand
      * @return The Card at the indexed position.
      */
-    public Card getCardAtIndex(int index) { return null; }
+    public Card getCardAtIndex(int index) { return cards.get(index); }
 
     /**
      * Returns the CardValue at the index
      * @param index the position of the Card in the hand.
      * @return The CardValue of the Card at the index
      */
-    public CardValue getValueAtIndex(int index) { return null; }
+    public CardValue getValueAtIndex(int index) {
+
+        return cards.get(index).getValue(); }
 
     /**
      * Returns the CardSuit at the index
      * @param index the position of the Card in the index
      * @return The CardSuit of the Card at the index
      */
-    public CardSuit getSuitAtIndex(int index) { return null; }
+    public CardSuit getSuitAtIndex(int index) { return cards.get(index).getSuit(); }
 
     /**
      * Checks to see if a hand contains a specific card
      * @param card the card being checked for
      * @return True or false.
      */
-    public Boolean contains(Card card) { return null; }
+    public Boolean contains(Card card) { return cards.contains(card); }
 
     /**
      * Add a card to the Arraylist in the Hand
      * @param card the Card to be added
      */
-    public void add(Card card) {}
-
+    public void add(Card card) {
+        cards.add(card);
+    }
     /**
      * @return a formatted representaion of the hand with the Cards and the position they are in
      *
      */
+    public Boolean isEmpty(){
+        return cards.isEmpty();}
+
+    public void clear(){
+        cards.clear();
+    }
+
+    public int size() {
+        return cards.size();
+    }
+
+
+
     @Override
-    public String toString() { return ""; }
+    public String toString() {
+        String result = "";
+
+        for(int i = 0; i < cards.size(); i++){
+            result += cards.get(i).toString() + "\n";
+        }
+
+        return result; }
 
 }

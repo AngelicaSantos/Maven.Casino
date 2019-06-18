@@ -4,55 +4,108 @@ import io.zipcoder.casino.Card;
 import io.zipcoder.casino.GamblingPlayer;
 import io.zipcoder.casino.Hand;
 import io.zipcoder.casino.Player;
+import io.zipcoder.casino.utilities.Console;
 
-import java.util.ArrayList;
 
-public class BlackjackPlayer extends Player implements GamblingPlayer {
-
+public class BlackjackPlayer implements GamblingPlayer {
     private Player player;
-    private Player dealer;
     private Hand playerHand;
-    private Hand dealerHand;
+    private Hand playerHandSplit;
+    private Console console = new Console(System.in, System.out);
 
 
     public BlackjackPlayer(Player player){
         this.player = player;
         this.playerHand = new Hand();
+        this.playerHandSplit = new Hand();
     }
-
     public BlackjackPlayer(){
-        this.dealer = new Player(0, "Dealer");
-        this.dealerHand = new Hand();
+        this.player = new Player();
+        this.playerHand = new Hand();
+    }
+    public String getPlayerName(){
+        return player.getName();
     }
 
-    public ArrayList<Card> getHand(){
-        return null;
+    public Integer getWalletBalance(){
+        return player.getMoney();
     }
 
-    public void discardHand(){
 
+    public Hand getHand(){
+        return this.playerHand;
     }
 
-    public void hit(Card cardToAdd){
-        //adds card from deck to hand
+    public Hand getSplitHand(){
+        return this.playerHandSplit;
     }
 
+    public void discardHand() {
+        if (playerHand!= null){
+            playerHand.clear();
+        }
+        if (playerHandSplit != null) {
+            playerHandSplit.clear();
+        }
+    }
+
+    public void hitForPlayer(Card cardToAdd){
+        this.playerHand.add(cardToAdd);
+
+
+    }
+    public void hitForSplitHand(Card cardToAdd){
+        this.playerHandSplit.add(cardToAdd);
+
+
+    }
     public void newSplitHand(){
-
+        this.playerHandSplit.add(playerHand.removeByIndex(1));
     }
 
 
-    public Integer getHandValue(){
-        return null;
+    public Integer getHandValue(Hand handToEvaluate){
+        int handValue = 0;
+        int aces = 0;
+
+        for(int i = 0; i < handToEvaluate.size(); i++){
+            if(handToEvaluate.getCardAtIndex(i).getBlackJackValue(handToEvaluate.getCardAtIndex(i)) > 10){
+                handValue += 10;
+            }
+            else if(handToEvaluate.getCardAtIndex(i).getBlackJackValue(handToEvaluate.getCardAtIndex(i)) == 1){
+                aces++;
+                handValue += 11;
+            }
+            else {handValue += handToEvaluate.getCardAtIndex(i).getBlackJackValue(handToEvaluate.getCardAtIndex(i));}
+
+
+        }
+
+        while(handValue > 21 && aces > 0){
+            handValue -= 10;
+            aces--;
+        }
+
+        return handValue;
     }
-
-//    public Integer bet(){ return null; }
-
-
-
 
     @Override
     public Integer bet() {
-        return null;
+        String wantToBet = "How much would you like to bet?";
+        Integer betAmount = console.getIntegerInput(wantToBet);
+        Integer newWallet = player.getMoney()-betAmount;
+        player.setMoney(newWallet);
+        return betAmount;
     }
+
+    public Integer bet(Integer amount) {
+        Integer newWallet = player.getMoney()-amount;
+        player.setMoney(newWallet);
+        return player.getMoney();
+    }
+    public Integer addToWallet(Integer amount){
+        Integer newWallet = player.getMoney() + amount;
+        player.setMoney(newWallet);
+        return player.getMoney();}
+
 }
