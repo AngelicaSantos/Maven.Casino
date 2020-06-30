@@ -2,7 +2,12 @@ package io.zipcoder.casino;
 
 
 import io.zipcoder.casino.GoFish.GoFish;
+
+import io.zipcoder.casino.Slots.SlotsMediator;
+
 import io.zipcoder.casino.GoFish.GoFishPlayer;
+
+import io.zipcoder.casino.Slots.SlotsPlayer;
 import io.zipcoder.casino.blackJack.Blackjack;
 import io.zipcoder.casino.continental.Continental;
 import io.zipcoder.casino.craps.CrapsGame;
@@ -84,6 +89,10 @@ public class Casino {
                 break;
             case 6:
                 //Slots slots
+                SlotsMediator slotMed = new SlotsMediator();
+                SlotsPlayer player = new SlotsPlayer();
+                SlotsMediator.slotsMediator(player);
+                break;
         }
 
     }

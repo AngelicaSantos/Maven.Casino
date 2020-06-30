@@ -57,6 +57,7 @@ public class BlackjackPlayer implements GamblingPlayer {
     public void hitForSplitHand(Card cardToAdd){
         this.playerHandSplit.add(cardToAdd);
 
+
     }
     public void newSplitHand(){
         this.playerHandSplit.add(playerHand.removeByIndex(1));
@@ -76,6 +77,7 @@ public class BlackjackPlayer implements GamblingPlayer {
                 handValue += 11;
             }
             else {handValue += handToEvaluate.getCardAtIndex(i).getBlackJackValue(handToEvaluate.getCardAtIndex(i));}
+
 
         }
 
